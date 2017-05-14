@@ -1,0 +1,45 @@
+	
+	@Override
+	public Serializable insert@tempName(SDO params) {
+		return serviceUtil.getEntityDao().insert(getEntity(@TABLENAME_ENTITY), params.getProperties());
+	}
+
+	@Override
+	public void update@tempName(SDO params) {
+		serviceUtil.getEntityDao().update(getEntity(@TABLENAME_ENTITY), params.getProperties());
+	}
+
+	@Override
+	public Map<String, Object> load@tempName(SDO params) {
+		return serviceUtil.getEntityDao().load(getEntity(@TABLENAME_ENTITY), params.getProperties());
+	}
+
+	@Override
+	public void delete@tempName(SDO params) {
+		serviceUtil.getEntityDao().delete(getEntity(@TABLENAME_ENTITY), params.getProperties());
+	}
+	/*@Override
+	public void delete@tempName(Long[] ids) {
+		serviceUtil.getEntityDao().deleteByIds(
+				getEntity(@TABLENAME_ENTITY), ids);
+	}*/
+
+	@Override
+	public Map<String, Object> slicedQuery@tempName(SDO params) {
+		QueryModel query = serviceUtil.getEntityDao().getQueryModel(getEntity(@TABLENAME_ENTITY),
+				params.getProperties());
+		return serviceUtil.getSQLQuery().executeSlicedQuery(query,
+				params);
+	}
+	/*
+	@Override
+	public void update@tempNameStatus(Long[] ids, int status) {
+		serviceUtil.updateById("", "status", "", ids,
+				status);
+	}
+
+	@Override
+	public void update@tempNameSequence(Map<Long, Long> data) {
+		serviceUtil.updateSequence(MODEL_FILE_NAME,
+				@TABLENAME_ENTITY,"", data);
+	}*/

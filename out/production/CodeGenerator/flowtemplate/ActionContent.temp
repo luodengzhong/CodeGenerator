@@ -1,0 +1,39 @@
+
+	public String forwardList() {
+		return forward("@ObjectList");
+	}
+
+	public String slicedQuery() {
+        SDO sdo = this.getSDO();
+        try {
+            Map<String, Object> map = @serviceNameService.slicedQuery(sdo);
+            return toResult(map);
+        } catch (Exception e) {
+            return error(e);
+        }
+    }
+
+	public String showInsert() {
+		SDO sdo = getSDO();
+		putAttr(getDefaultExprValues(@ObjectService.MODEL_FILE_NAME, @ObjectService.@TABLENAME_ENTITY));
+		putAttr("processDefinitionKey", @ObjectService.PROCESS_DEFINITION_KEY);
+		putAttr("procUnitId", "Apply");
+		return forward("@ObjectApproval");
+	}
+
+
+	public String showUpdate() {
+		SDO sdo = this.getSDO();
+		try {
+			Long bizId = (Long) sdo.getProperty("bizId", Long.class);
+			Long @objectId = (Long) sdo.getProperty("@tableId", Long.class);
+			if ((bizId != null) && (@objectId == null)) {
+				sdo.putProperty("@objectId", bizId);
+			}
+			Map<String, Object> map = @serviceNameService.load(sdo);
+			return forward("@ObjectApproval", map);
+		} catch (Exception e) {
+			return errorPage(e);
+		}
+	}
+

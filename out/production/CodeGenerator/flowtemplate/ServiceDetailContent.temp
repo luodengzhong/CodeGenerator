@@ -1,0 +1,16 @@
+
+    public static final String @TABLENAME_ENTITY = "@object";
+
+    public Serializable insertDetail(SDO params);
+
+	public void updateDetail(SDO params);
+
+	public void deleteDetail(SDO params);
+
+	public void deleteDetail(Long[] ids);
+
+	public void updateDetailSequence(Map<Long, Long> data);
+
+	public Map<String, Object> queryDetail(SDO sdo);
+
+	public Map<String, Object> loadDetail(SDO sdo);

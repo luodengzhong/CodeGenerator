@@ -1,0 +1,33 @@
+@packageName
+
+import java.io.Serializable;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.struts2.convention.annotation.Action;
+import org.springframework.stereotype.Controller;
+import com.brc.client.action.base.CommonAction;
+import com.brc.util.LogHome;
+import com.brc.util.SDO;
+import @servicePackageName.@ObjectService;
+
+ /**
+ *
+ * @ClassName: @ObjectAction
+ * @date  @currentTime
+ */
+@Controller
+@Action("@objectAction")
+public class @ObjectAction extends CommonAction {
+
+	private static final long serialVersionUID = 1L;
+
+	@Resource
+	private @ObjectService @objectService;
+
+	protected String getPagePath() {
+		return "@resourcePath";
+	}
+	
+	@ActionContent
+	
+}

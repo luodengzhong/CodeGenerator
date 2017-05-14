@@ -1,0 +1,24 @@
+@entity<entity name="@object" label="@tableComment" table="@tableName" update="true" insert="true">
+@id<id column="@columnName" name="@name" type="@type" length="@length" sequence="SEQ_ID"/>
+
+        <property column="SUBJECT" name="subject" type="java.lang.String" length="50" required="false" label="主题" update="true" insert="true"/>
+        <property column="BILL_CODE" name="billCode" type="java.lang.String" length="32" required="false" label="单据号码" default-expr="getSerialNumber('SerialNumber')" fill-kind="both"/>
+        <property column="ORGAN_ID" name="organId" type="java.lang.String" length="64" required="false" label="公司ID" default-expr="currentOrgId()" fill-kind="both"/>
+        <property column="ORGAN_NAME" name="organName" type="java.lang.String" length="64" required="false" label="公司名称" default-expr="currentOrgName()" fill-kind="both"/>
+        <property column="CENTER_ID" name="centerId" type="java.lang.String" length="32" required="false" label="中心ID" update="true" insert="true" default-expr="currentCenterId()"  fill-kind="both"/>
+        <property column="CENTER_NAME" name="centerName" type="java.lang.String" length="64" required="false" label="中心" update="true" insert="true" default-expr="currentCenterId()"  fill-kind="both"/>
+        <property column="DEPT_ID" name="deptId" type="java.lang.String" length="64" required="false" label="部门ID" default-expr="currentDeptId()" fill-kind="both"/>
+        <property column="DEPT_NAME" name="deptName" type="java.lang.String" length="64" required="false" label="部门" default-expr="currentDeptName()" fill-kind="both"/>
+        <property column="POSITION_ID" name="positionId" type="java.lang.String" length="64" required="false" label="职务ID" default-expr="currentPositionId()" fill-kind="both"/>
+        <property column="POSITION_NAME" name="positionName" type="java.lang.String" length="64" required="false" label="职务" default-expr="currentPositionName()" fill-kind="both"/>
+        <property column="PERSON_MEMBER_ID" name="personMemberId" type="java.lang.String" length="65" required="false" label="人员ID" default-expr="currentPersonMemberId()" fill-kind="both"/>
+        <property column="PERSON_MEMBER_NAME" name="personMemberName" type="java.lang.String" length="32" required="false" label="姓名" default-expr="currentPersonMemberName()" fill-kind="both"/>
+        <property column="FULL_ID" name="fullId" type="java.lang.String" length="1024" required="false" label="FULL_ID" default-expr="currentFullId()" fill-kind="both"/>
+        <property column="FILLIN_DATE" name="fillinDate" type="java.util.Date" length="7" required="false" label="填表日期" default-expr="currentDateTime()" fill-kind="both"/>
+        <property column="STATUS" name="status" type="java.lang.Integer" length="22" required="false" label="状态" update="true" insert="true"/>
+        <version column="VERSION" name="version" type="java.lang.Long" length="22" required="false" label="版本" update="true" insert="true"/>
+
+@property<property column="@columnName" name="@name" type="@type" length="@length" required="@required" label="@label" update="true" insert="true"/>
+@entity</entity>
+
+@detailEntity

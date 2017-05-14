@@ -1,0 +1,98 @@
+    private Entity getEntity() {
+        return serviceUtil.getEntity(MODEL_FILE_NAME, @TABLENAME_ENTITY);
+    }
+
+    private Serializable insert(SDO params) {
+        return serviceUtil.getEntityDao().insert(getEntity(), params.getProperties());
+    }
+
+
+    private Serializable update(SDO params) {
+        return serviceUtil.getEntityDao().update(getEntity(), params.getProperties());
+    }
+
+
+    @Override
+    public Map<String, Object> load(SDO params) {
+        return serviceUtil.getEntityDao().load(getEntity(), params.getProperties());
+    }
+
+
+    @Override
+    public Map<String, Object> slicedQuery(SDO params) {
+        QueryModel query = serviceUtil.getEntityDao().getQueryModel(getEntity(), params.getProperties());
+        return serviceUtil.getSQLQuery().executeSlicedQuery(query, params);
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, int status) {
+        serviceUtil.updateById("@tableName", "status", "@TABLE_ID", ids, status);
+    }
+
+    public void updateStatus(Long bizId, BizBillStatus status) {
+        serviceUtil.updateStatusById("@tableName", "@TABLE_ID", bizId, status.getId());
+    }
+
+
+    protected void setTaskDescription(DelegateTask delegateTask) {
+        try{
+            String bizId = delegateTask.getExecution().getProcessBusinessKey();
+            if (!StringUtil.isBlank(bizId)) {
+                SDO sdo = this.getBizAndApprovalData();
+                String subject = sdo.getProperty("subject", String.class);
+                subject = StringUtil.isBlank(subject) ? "请输入流程主题" : subject;
+                delegateTask.setDescription(subject);
+            }
+         }catch (Exception e){
+         }
+
+    }
+
+    private void setTaskSubject(DelegateTask delegateTask) {
+        setTaskDescription(delegateTask);
+        SDO sdo = this.getBizAndApprovalData();
+        String taskId = sdo.getProperty("taskId", String.class);
+        if (isApplyProcUnit(delegateTask) && !StringUtil.isBlank(taskId)) {
+            String subject = sdo.getProperty("subject", String.class);
+            subject = StringUtil.isBlank(subject) ? "请输入流程主题" : subject;
+            this.workflowService.updateTaskDescription(taskId, subject);
+        }
+    }
+
+    @Override
+    protected Long saveBizAndApprovalData(DelegateTask delegateTask) {
+        super.saveBizAndApprovalData(delegateTask);
+        Long bizId = this.getBizIdAsLong();
+        if (CommonUtil.isLongNull(bizId)) {
+            bizId = (Long) this.insert(this.getBizAndApprovalData());
+            this.updateStatus(bizId, BizBillStatus.APPLYING);
+        } else {
+            this.update(this.getBizAndApprovalData());
+        }
+        setTaskSubject(delegateTask);
+        return bizId;
+    }
+
+    @Override
+    protected void onBeforeComplete(DelegateTask delegateTask) {
+        super.onBeforeComplete(delegateTask);
+        Long bizId = this.getBizIdAsLong();
+        if ((isApplyProcUnit(delegateTask)) && (isAdvanceCmd())) {
+            updateStatus(bizId, BizBillStatus.APPROVING);
+        }
+    }
+
+    @Override
+    protected void onEnd(DelegateExecution delegateExecution) {
+        super.onEnd(delegateExecution);
+        super.onEnd(delegateExecution);
+        BizBillStatus status = BizBillStatus.COMPLETED;
+        Long bizId = this.getBizIdAsLong();
+        if (!approvePassed()) {
+            status = BizBillStatus.ABORTED;
+        } else {
+            //TODO
+            //流程结束后业务处理
+        }
+        updateStatus(bizId, status);
+    }

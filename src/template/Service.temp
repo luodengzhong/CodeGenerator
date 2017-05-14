@@ -1,0 +1,20 @@
+@packageName
+
+import java.io.Serializable;
+import java.util.Map;
+import com.brc.util.SDO;
+
+/**
+ * (这里用一句话描述这个方法的作用)
+ * @author @Author
+ * @date @currentTime
+ */
+public interface @ObjectService {
+	/**
+	 * 实体资源路径
+	 */
+	public static final String MODEL_FILE_NAME = "config/domain/@resourcePath";
+	
+	@ServiceContent
+	
+}

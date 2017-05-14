@@ -1,0 +1,131 @@
+
+function initializeGrid() {
+	var toolbarOptions = UICtrl.getDefaultToolbarOptions({
+		addHandler: addDetailHandler,
+		updateHandler: function(){
+			updateDetailHandler();
+		},
+		deleteHandler: deleteDetailHandler,
+		//enableHandler: enableHandler,
+		//disableHandler: disableHandler,
+		saveSortIDHandler: saveSortIDHandler
+	});
+	gridManager = UICtrl.grid('#maingrid', {
+		columns: [
+
+			@property{ display: "@label", name: "@name", width: 100, minWidth: 60, type: "string", align: "left" },
+        { display: "排序号", name: "sequence", width: 100, minWidth: 60, type: "string", align: "left",
+            render: function(row,idx,val){
+                return UICtrl.sequenceRender(row,"@tableId");
+            }
+        },
+        { display: "状态", name: "status", width: 100, minWidth: 60, type: "string", align: "left",
+            render: UICtrl.getStatusInfo
+        },
+			{}
+		],
+		dataAction : 'server',
+		url: web_app.name+'/@mainObjectAction!queryDetail.ajax',
+		parms: {@maintableId: getId()||-1 },
+		usePager: true,
+		width : '100%',
+		height : '300',
+		heightDiff : -5,
+		headerRowHeight : 25,
+		rowHeight : 25,
+		sortName:'sequence',
+		sortOrder:'asc',
+		toolbar: toolbarOptions,
+		fixedCellHeight : true,
+		selectRowButtonOnly : true,
+		onDblClickRow : function(data, rowindex, rowobj) {
+			updateDetailHandler(data.@tableId);
+		}
+	});
+}
+
+
+//添加按钮
+function addDetailHandler() {
+    //新增保存
+	if(Public.isBlank(getId())){
+		Public.tip("请先保存单据");return ;
+	}
+    var insertDetail = function() {
+    	var _self = this;
+        $('#submitDetailForm').ajaxSubmit({url: web_app.name + '/@mainObjectAction!insertDetail.ajax',
+            param: {@maintableId: $("#@maintableId").val()},
+            success : function(data) {
+                refreshFlag = true;
+                dialogClose();
+                _self.close();
+            }
+        });
+    };
+	UICtrl.showAjaxDialog({
+		url: web_app.name + '/@mainObjectAction!showDetailInsert.load',
+		ok: insertDetail,
+		close: dialogClose
+	});
+}
+
+//编辑按钮
+function updateDetailHandler(@tableId){
+	if(!@tableId){
+		var row = UICtrl.checkSelectedRows(gridManager);
+		if (!row) {return; }
+        @tableId =row.@tableId;
+	}
+	var updateDetail = function(){
+		var _self = this;
+        $('#submitDetailForm').ajaxSubmit({url: web_app.name + '/@mainObjectAction!updateDetail.ajax',
+            success : function() {
+                refreshFlag = true;
+                dialogClose();
+                _self.close();
+            }
+        });
+    };
+	UICtrl.showAjaxDialog({
+		url: web_app.name + '/@mainObjectAction!showDetailUpdate.load',
+		param:{@tableId: @tableId},
+		ok: updateDetail,
+		close: dialogClose
+	});
+}
+
+//删除按钮
+function deleteDetailHandler(){
+	var row = UICtrl.checkSelectedRows(gridManager);
+	if (!row) {return; }
+	UICtrl.confirm('确定删除吗?',function(){
+		//所需参数需要自己提取 {id:row.id}
+		Public.ajax(web_app.name + '/@mainObjectAction!deleteDetail.ajax', {@tableId: row.@tableId}, function(){
+			reloadGrid();
+		});
+	});
+}
+
+//保存扩展字段排序号
+function saveSortIDHandler(){
+    var action = "@mainObjectAction!updateDetailSequence.ajax";
+    DataUtil.updateSequence({action: action,gridManager: gridManager,idFieldName:'@tableId', onSuccess: function(){
+        reloadGrid();
+    }});
+    return false;
+}
+
+
+
+
+//关闭对话框
+function dialogClose(){
+	if(refreshFlag){
+		reloadGrid();
+		refreshFlag=false;
+	}
+}
+
+function reloadGrid(){
+	gridManager.reload();
+}

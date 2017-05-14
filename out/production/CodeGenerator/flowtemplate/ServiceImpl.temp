@@ -1,0 +1,34 @@
+@packageName
+
+import java.io.Serializable;
+import java.util.Map;
+import javax.annotation.Resource;
+
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.DelegateTask;
+import org.springframework.stereotype.Service;
+
+import com.brc.system.bpm.FlowBroker;
+import com.brc.system.share.service.ServiceUtil;
+import com.brc.system.util.CommonUtil;
+import com.brc.util.QueryModel;
+import com.brc.util.SDO;
+import com.brc.util.StringUtil;
+import com.brc.xmlbean.EntityDocument.Entity;
+import com.brc.biz.common.BizBillStatus;
+import @servicePackageName.@ObjectService;
+
+ /**
+ *
+ * @date  @currentTime
+ */
+@Service("@objectService")
+public class @ObjectServiceImpl extends FlowBroker implements @ObjectService {
+
+	@Resource
+	private ServiceUtil serviceUtil;
+	
+	@ServiceImplContent
+
+	@ServiceImplDetailContent
+}

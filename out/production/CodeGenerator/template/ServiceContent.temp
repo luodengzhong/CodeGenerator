@@ -1,0 +1,54 @@
+	/**
+	 * @tableComment
+	 */
+	public static final String @TABLENAME_ENTITY = "@object";	
+	/**
+	* 添加   @tableComment
+	* @author @Author  
+	* @return Serializable
+	*/
+	public Serializable insert@tempName(SDO params);
+
+	/**
+	* 编辑 @tableComment
+	* @author @Author  
+	* @param params
+	*/
+	public void update@tempName(SDO params);
+
+	/**
+	* 加载 @tableComment
+	* @author @Author  
+	* @return SDO
+	*/
+	public Map<String, Object> load@tempName(SDO params);
+
+	/**
+	* 删除 @tableComment
+	* @author @Author  
+	*/
+	public void delete@tempName(SDO params);
+    //public void delete@tempName(Long[] ids);
+    
+	/**
+	* 查询 @tableComment 
+	* @author @Author  
+	* @return SDO
+	*/
+	public Map<String, Object> slicedQuery@tempName(SDO params);
+	
+	/**
+	* 启用 or 禁用 @tableComment 
+	* @author @Author  
+	* @return SDO
+	*/
+	//public void update@tempNameStatus(Long[] ids, int status);
+
+	/**
+	* 保存排序号 @tableComment 
+	* @author @Author  
+	* @return SDO
+	*/
+	//public void update@tempNameSequence(Map<Long, Long> data);
+	
+

@@ -1,0 +1,4 @@
+@entity<entity name="@object" label="@tableComment" table="@tableName" update="true" insert="true">
+@id<id column="@columnName" name="@name" type="@type" length="@length" sequence="SEQ_ID"/>
+@property<property column="@columnName" name="@name" type="@type" length="@length" required="@required" label="@label" update="true" insert="true"/>
+@entity</entity>
