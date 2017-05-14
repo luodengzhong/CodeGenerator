@@ -25,8 +25,8 @@
 	public String showUpdate() {
 		SDO sdo = this.getSDO();
 		try {
-			Long bizId = (Long) sdo.getProperty("bizId", Long.class);
-			Long @objectId = (Long) sdo.getProperty("@tableId", Long.class);
+			Long bizId = sdo.getProperty("bizId", Long.class);
+			Long @objectId = sdo.getProperty("@tableId", Long.class);
 			if ((bizId != null) && (@objectId == null)) {
 				sdo.putProperty("@objectId", bizId);
 			}
