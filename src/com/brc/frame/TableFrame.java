@@ -17,18 +17,8 @@
  import java.io.File;
  import java.util.ArrayList;
  import java.util.List;
- import javax.swing.DefaultListModel;
- import javax.swing.JButton;
- import javax.swing.JCheckBox;
- import javax.swing.JFileChooser;
- import javax.swing.JFrame;
- import javax.swing.JLabel;
- import javax.swing.JList;
- import javax.swing.JOptionPane;
- import javax.swing.JScrollPane;
- import javax.swing.JTextField;
- import javax.swing.UIManager;
- 
+ import javax.swing.*;
+
  public class TableFrame extends JFrame
    implements ActionListener
  {
@@ -40,6 +30,9 @@
    JLabel classNameLab = new JLabel("领域名称："); JLabel queryLab = new JLabel("查询表：");
    JLabel createBy = new JLabel("创建者：");
    JLabel jspPathLab = new JLabel("JSP路径：");
+   JLabel templateKindLab = new JLabel("模板类型：");
+   String[] templateKindItem = { "通用模板", "流程模板"};
+   JComboBox templateKind = new JComboBox(templateKindItem);
    JList jlistLeft;
    JList jlistRight;
    DefaultListModel jlistModelLeft;
@@ -161,7 +154,8 @@
      this.storePathTxt.setText(PropertyUtil.getProperty("storePath", ""));
      this.storePathTxt.setEditable(false);
      this.storePathTxt.setBackground(this.not_editable_color);
- 
+
+
      this.chooserButton.setBounds(370, 300, 90, 25);
      getContentPane().add(this.chooserButton);
  
@@ -175,19 +169,26 @@
              .getAbsolutePath());
        }
      });
-     this.isBean.setBounds(30, 330, 90, 20);
+     //模板类型
+     this.templateKindLab.setBounds(20, 330, 60, 25);
+     getContentPane().add(this.templateKindLab);
+
+     this.templateKind.setBounds(80, 330, 280, 25);
+     getContentPane().add(this.templateKind);
+
+     this.isBean.setBounds(30, 360, 90, 20);
      getContentPane().add(this.isBean);
  
-     this.isService.setBounds(125, 330, 110, 20);
+     this.isService.setBounds(125, 360, 110, 20);
      getContentPane().add(this.isService);
  
-     this.isAction.setBounds(235, 330, 110, 20);
+     this.isAction.setBounds(235, 360, 110, 20);
      getContentPane().add(this.isAction);
  
-     this.isXML.setBounds(345, 330, 110, 20);
+     this.isXML.setBounds(345, 360, 110, 20);
      getContentPane().add(this.isXML);
  
-     this.isJsp.setBounds(30, 363, 110, 20);
+     this.isJsp.setBounds(30, 393, 110, 20);
      getContentPane().add(this.isJsp);
      this.isJsp.addItemListener(new ItemListener() {
        public void itemStateChanged(ItemEvent e) {
@@ -201,16 +202,16 @@
          }
        }
      });
-     this.jspPathLab.setBounds(150, 360, 70, 25);
+     this.jspPathLab.setBounds(150, 390, 70, 25);
      getContentPane().add(this.jspPathLab);
  
-     this.jspPathTxt.setBounds(200, 360, 170, 25);
+     this.jspPathTxt.setBounds(200, 390, 170, 25);
      getContentPane().add(this.jspPathTxt);
      this.jspPathTxt.setText(PropertyUtil.getProperty("jspPath", ""));
      this.jspPathTxt.setEditable(false);
      this.jspPathTxt.setBackground(this.not_editable_color);
  
-     this.isOneDomain.setBounds(30, 387, 140, 30);
+     this.isOneDomain.setBounds(30, 417, 140, 30);
      getContentPane().add(this.isOneDomain);
      this.isOneDomain.addItemListener(new ItemListener() {
        public void itemStateChanged(ItemEvent e) {
@@ -224,24 +225,24 @@
          }
        }
      });
-     this.classNameLab.setBounds(180, 390, 70, 25);
+     this.classNameLab.setBounds(180, 420, 70, 25);
      getContentPane().add(this.classNameLab);
  
-     this.classNameTxt.setBounds(240, 390, 130, 25);
+     this.classNameTxt.setBounds(240, 420, 130, 25);
      getContentPane().add(this.classNameTxt);
      this.classNameTxt.setEditable(false);
      this.classNameTxt.setBackground(this.not_editable_color);
  
-     this.commit.setBounds(80, 420, 100, 30);
+     this.commit.setBounds(80, 450, 100, 30);
      getContentPane().add(this.commit);
      this.commit.addActionListener(this);
  
-     this.back.setBounds(280, 420, 100, 30);
+     this.back.setBounds(280, 450, 100, 30);
      getContentPane().add(this.back);
      this.back.addActionListener(this);
  
      pack();
-     setSize(480, 485);
+     setSize(480, 515);
      setLocationRelativeTo(null);
    }
  
@@ -270,6 +271,7 @@
        boolean isXMLBol = this.isXML.isSelected();
        boolean isJSPBol = this.isJsp.isSelected();
        boolean isOneDomainBol = this.isOneDomain.isSelected();
+       String templateKind = this.templateKind.getSelectedItem().toString();
        if ((isOneDomainBol) && ("".equals(className))) {
          JOptionPane.showMessageDialog(null, "领域模型名不能为空");
          return;
@@ -318,8 +320,14 @@
          tableModel.setJspPath(jspPath);
          tableModel.setOneDomainBol(isOneDomainBol);
          tableModel.setAuthor(author);
-//         FileGenerateAction.engineEntry(tableModel);
-         FlowFileGenerateAction.engineEntry(tableModel);
+         switch (templateKind){
+           case "通用模板":
+             FileGenerateAction.engineEntry(tableModel);
+             break;
+           case "流程模板":
+              FlowFileGenerateAction.engineEntry(tableModel) ;
+             break;
+         }
          JOptionPane.showMessageDialog(null, "已经成功生成");
        } catch (Exception e1) {
          e1.printStackTrace();
